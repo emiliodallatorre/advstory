@@ -7,6 +7,8 @@ class TrayListStyle {
     this.direction = Axis.horizontal,
     this.spacing = 12.0,
     this.padding = const EdgeInsets.symmetric(horizontal: 12.0),
+    this.scrollPhysics,
+    this.shrinkWrap,
   });
 
   /// Tray list direction. Trays can be stacked vertically or horizontally.
@@ -18,4 +20,7 @@ class TrayListStyle {
 
   /// Space between tray list and parent widget.
   final EdgeInsets padding;
+
+  final ScrollPhysics? scrollPhysics;
+  final bool? shrinkWrap;
 }

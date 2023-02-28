@@ -23,6 +23,8 @@ class TrayView extends StatefulWidget {
     required this.style,
     required this.buildStoryOnTrayScroll,
     required this.trayBuilder,
+    this.scrollPhysics,
+    this.shrinkWrap,
     Key? key,
   }) : super(key: key);
 
@@ -46,6 +48,9 @@ class TrayView extends StatefulWidget {
 
   /// {@macro advstory.buildStoryOnTrayScroll}
   final bool buildStoryOnTrayScroll;
+
+  final ScrollPhysics? scrollPhysics;
+  final bool? shrinkWrap;
 
   @override
   State<TrayView> createState() => _TrayViewState();
@@ -98,8 +103,7 @@ class _TrayViewState extends State<TrayView> with TickerProviderStateMixin {
     if (!_canShowStory) return;
 
     bool isAnimated = tray is TrayPositionProvider;
-    final pos = widget.controller.trayTapInterceptor?.call(index) ??
-        StoryPosition(0, index);
+    final pos = widget.controller.trayTapInterceptor?.call(index) ?? StoryPosition(0, index);
 
     if (isAnimated) {
       _trayAnimationManager!.update(shouldAnimate: true, index: index);
@@ -191,6 +195,8 @@ class _TrayViewState extends State<TrayView> with TickerProviderStateMixin {
         padding: widget.style.trayListStyle.padding,
         scrollDirection: widget.style.trayListStyle.direction,
         itemCount: widget.controller.storyCount,
+        physics: widget.scrollPhysics,
+        shrinkWrap: widget.shrinkWrap ?? false,
         itemBuilder: (context, index) {
           if (widget.buildStoryOnTrayScroll) {
             widget.buildHelper.prepareStory(index);
@@ -214,12 +220,8 @@ class _TrayViewState extends State<TrayView> with TickerProviderStateMixin {
           );
         },
         separatorBuilder: (context, index) => SizedBox(
-          width: widget.style.trayListStyle.direction == Axis.vertical
-              ? 0
-              : widget.style.trayListStyle.spacing,
-          height: widget.style.trayListStyle.direction == Axis.horizontal
-              ? 0
-              : widget.style.trayListStyle.spacing,
+          width: widget.style.trayListStyle.direction == Axis.vertical ? 0 : widget.style.trayListStyle.spacing,
+          height: widget.style.trayListStyle.direction == Axis.horizontal ? 0 : widget.style.trayListStyle.spacing,
         ),
       ),
     );
