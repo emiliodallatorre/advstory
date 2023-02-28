@@ -14,6 +14,8 @@ class AdvStoryStyle {
     this.loadingStyle = const LoadingStyle(),
     this.loadingScreen,
     this.hideBars = true,
+    this.aspectRatio = 9 / 16,
+    this.backgroundColor = Colors.black,
   });
 
   /// Story progress indicator style.
@@ -36,6 +38,9 @@ class AdvStoryStyle {
   ///
   /// _Setting this to false may cause unexpected resizing of the contents._
   final bool hideBars;
+
+  final double aspectRatio;
+  final Color backgroundColor;
 
   /// Shortcut for loading screen.
   ///
