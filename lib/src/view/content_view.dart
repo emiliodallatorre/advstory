@@ -7,8 +7,8 @@ import 'package:advstory/src/util/extended_page_controller.dart';
 import 'package:advstory/src/view/components/contents/contents_base.dart';
 import 'package:advstory/src/view/components/contents/simple_custom_content.dart';
 import 'package:advstory/src/view/components/story_indicator.dart';
-import 'package:advstory/src/view/inherited_widgets/data_provider.dart';
 import 'package:advstory/src/view/inherited_widgets/content_position_provider.dart';
+import 'package:advstory/src/view/inherited_widgets/data_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -44,16 +44,12 @@ class ContentViewState extends State<ContentView> {
   @override
   void didChangeDependencies() {
     _provider ??= DataProvider.of(context)!;
-    final initialPage =
-        _provider!.positionNotifier.initialPosition.story == widget.storyIndex
-            ? _provider!.positionNotifier.content
-            : 0;
+    final initialPage = _provider!.positionNotifier.initialPosition.story == widget.storyIndex ? _provider!.positionNotifier.content : 0;
     _pageController ??= ExtendedPageController(
       itemCount: widget.story.contentCount,
       initialPage: initialPage,
     );
-    _provider!.controller
-        .setContentController(_pageController!, widget.storyIndex);
+    _provider!.controller.setContentController(_pageController!, widget.storyIndex);
 
     super.didChangeDependencies();
   }
@@ -141,9 +137,7 @@ class ContentViewState extends State<ContentView> {
     if (interception != null) {
       interception();
     } else {
-      !_provider!.hasTrays
-          ? _provider!.controller.positionNotifier.shouldShowView.value = false
-          : Navigator.of(context).pop();
+      !_provider!.hasTrays ? _provider!.controller.positionNotifier.shouldShowView.value = false : Navigator.of(context).pop();
     }
   }
 
@@ -182,8 +176,8 @@ class ContentViewState extends State<ContentView> {
                         Scaffold(
                           backgroundColor: Colors.transparent,
                           body: SafeArea(
-                            top: _provider!.hasTrays,
-                            bottom: _provider!.hasTrays,
+                            top: _provider!.hasTrays && false,
+                            bottom: _provider!.hasTrays && false,
                             child: FadeTransition(
                               opacity: _provider!.controller.opacityController,
                               child: Stack(
@@ -203,11 +197,9 @@ class ContentViewState extends State<ContentView> {
                 builder: (context, value, child) {
                   return value == widget.storyIndex
                       ? StoryIndicator(
-                          activeIndicatorIndex: _pageController!.page?.toInt() ??
-                              _pageController!.initialPage.toInt(),
+                          activeIndicatorIndex: _pageController!.page?.toInt() ?? _pageController!.initialPage.toInt(),
                           count: widget.story.contentCount,
-                          controller:
-                              _provider!.controller.flowManager.indicatorController,
+                          controller: _provider!.controller.flowManager.indicatorController,
                           style: _provider!.style.indicatorStyle,
                         )
                       : StoryIndicator.placeholder(

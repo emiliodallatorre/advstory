@@ -5,8 +5,8 @@ import 'package:advstory/src/controller/advstory_player_controller.dart';
 import 'package:advstory/src/model/models.dart';
 import 'package:advstory/src/util/build_helper.dart';
 import 'package:advstory/src/view/components/story_indicator.dart';
-import 'package:advstory/src/view/story_view.dart';
 import 'package:advstory/src/view/inherited_widgets/data_provider.dart';
+import 'package:advstory/src/view/story_view.dart';
 import 'package:advstory/src/view/tray_view.dart';
 import 'package:flutter/material.dart';
 
@@ -31,6 +31,8 @@ class AdvStory extends StatefulWidget {
     this.preloadStory = true,
     this.preloadContent = true,
     this.style = const AdvStoryStyle(),
+    this.onTapTray,
+    this.onLongPressTray,
     Key? key,
   })  : storyController = controller,
         hasTrays = true,
@@ -49,6 +51,8 @@ class AdvStory extends StatefulWidget {
     this.preloadStory = true,
     this.style = const AdvStoryStyle(),
     required AdvStoryPlayerController controller,
+    this.onTapTray,
+    this.onLongPressTray,
   })  : hasTrays = false,
         buildStoryOnTrayScroll = false,
         trayBuilder = null,
@@ -135,6 +139,8 @@ class AdvStory extends StatefulWidget {
   /// {@endtemplate}
   final bool preloadContent;
 
+  final Function(int)? onTapTray, onLongPressTray;
+
   @override
   State<AdvStory> createState() => _AdvStoryState();
 }
@@ -161,8 +167,7 @@ class _AdvStoryState extends State<AdvStory> with TickerProviderStateMixin {
     );
     _indicatorController = AnimationController(vsync: this);
 
-    _controller = (widget.storyController ?? AdvStoryController())
-        as AdvStoryControllerImpl;
+    _controller = (widget.storyController ?? AdvStoryController()) as AdvStoryControllerImpl;
     _controller
       ..storyCount = widget.storyCount
       ..setAnimationControllers(
@@ -207,6 +212,8 @@ class _AdvStoryState extends State<AdvStory> with TickerProviderStateMixin {
         trayBuilder: widget.trayBuilder!,
         scrollPhysics: widget.style.trayListStyle.scrollPhysics,
         shrinkWrap: widget.style.trayListStyle.shrinkWrap,
+        onTapTray: widget.onTapTray,
+        onLongPressTray: widget.onLongPressTray,
       );
     }
 
