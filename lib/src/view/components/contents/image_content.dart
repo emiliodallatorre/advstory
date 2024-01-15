@@ -77,6 +77,8 @@ class _ImageContentState extends StoryContentState<ImageContent> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     if (_hasError && widget.errorBuiler != null) {
       return widget.errorBuiler!.call();
     }

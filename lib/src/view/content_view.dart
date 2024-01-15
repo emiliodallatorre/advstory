@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:ui';
 
 import 'package:advstory/src/contants/enums.dart';
@@ -33,8 +34,8 @@ class ContentView extends StatefulWidget {
 }
 
 /// State for [ContentView].
-class ContentViewState extends State<ContentView> {
-  final _key = GlobalKey<ScaffoldState>();
+class ContentViewState extends State<ContentView> with AutomaticKeepAliveClientMixin {
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   ExtendedPageController? _pageController;
   DataProvider? _provider;
 
@@ -66,7 +67,7 @@ class ContentViewState extends State<ContentView> {
   /// Skips to the previous content if touched position is in the left 23
   /// percent of screen.
   void _handleTapUp(TapUpDetails event) {
-    final viewWidth = _key.currentContext?.size?.width ?? width;
+    final viewWidth = scaffoldKey.currentContext?.size?.width ?? width;
     final x = event.localPosition.dx;
 
     if (x > viewWidth * .77) {
@@ -124,7 +125,7 @@ class ContentViewState extends State<ContentView> {
     ];
   }
 
-  void _handleVerticalDrag(DragEndDetails details) {
+  void onVerticalDrag(DragEndDetails details) {
     if (details.primaryVelocity! < 0) {
       _provider!.controller.resume();
       return;
@@ -143,9 +144,11 @@ class ContentViewState extends State<ContentView> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     return Scaffold(
       backgroundColor: _provider!.style.backgroundColor,
-      key: _key,
+      key: scaffoldKey,
       resizeToAvoidBottomInset: false,
       body: Center(
         child: AspectRatio(
@@ -153,19 +156,21 @@ class ContentViewState extends State<ContentView> {
           child: Stack(
             children: [
               GestureDetector(
+                behavior: HitTestBehavior.translucent,
                 onLongPressDown: _handleDownPress,
                 onLongPressCancel: _provider!.controller.resume,
                 onLongPressUp: _provider!.controller.resume,
                 onLongPress: _provider!.controller.exactPause,
                 onTapUp: _handleTapUp,
-                onVerticalDragEnd: _handleVerticalDrag,
+                onVerticalDragEnd: onVerticalDrag,
                 child: PageView.builder(
                   allowImplicitScrolling: _provider!.preloadContent,
                   controller: _pageController,
                   itemCount: widget.story.contentCount,
                   physics: const NeverScrollableScrollPhysics(),
                   itemBuilder: (context, index) {
-                    final content = widget.story.contentBuilder(index);
+                    final AdvStoryContent content = widget.story.contentBuilder(index);
+                    log("Built story content $index, widget is ${content.runtimeType}");
 
                     return Stack(
                       children: [
@@ -173,18 +178,11 @@ class ContentViewState extends State<ContentView> {
                           position: StoryPosition(index, widget.storyIndex),
                           child: content,
                         ),
-                        Scaffold(
-                          backgroundColor: Colors.transparent,
-                          body: SafeArea(
-                            top: _provider!.hasTrays && false,
-                            bottom: _provider!.hasTrays && false,
-                            child: FadeTransition(
-                              opacity: _provider!.controller.opacityController,
-                              child: Stack(
-                                fit: StackFit.expand,
-                                children: _getComponents(content),
-                              ),
-                            ),
+                        FadeTransition(
+                          opacity: _provider!.controller.opacityController,
+                          child: Stack(
+                            fit: StackFit.expand,
+                            children: _getComponents(content),
                           ),
                         ),
                       ],
@@ -214,4 +212,7 @@ class ContentViewState extends State<ContentView> {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

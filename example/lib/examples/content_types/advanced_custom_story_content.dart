@@ -59,8 +59,7 @@ class MyCustomContent extends StoryContent {
   final int contentIndex;
 
   @override
-  StoryContentState<MyCustomContent> createState() =>
-      MyCustomStoryContentState();
+  StoryContentState<MyCustomContent> createState() => MyCustomStoryContentState();
 }
 
 /// #### WARNING:
@@ -148,6 +147,8 @@ class MyCustomStoryContentState extends StoryContentState<MyCustomContent> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     // loadingScreen is your defined loading screen or AdvStory default one.
     // Check if this content should show a loading screen and return value
     // accordingly.

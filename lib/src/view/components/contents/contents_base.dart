@@ -12,8 +12,8 @@ import 'package:advstory/src/util/cron.dart';
 import 'package:advstory/src/view/components/contents/image_content.dart';
 import 'package:advstory/src/view/components/contents/video_content.dart';
 import 'package:advstory/src/view/components/tray/animated_tray.dart';
-import 'package:advstory/src/view/inherited_widgets/data_provider.dart';
 import 'package:advstory/src/view/inherited_widgets/content_position_provider.dart';
+import 'package:advstory/src/view/inherited_widgets/data_provider.dart';
 import 'package:flutter/material.dart';
 
 const _excMessage = 'AdvStory fields didn\'t set yet, '
@@ -41,7 +41,7 @@ abstract class StoryContent extends StatefulWidget implements AdvStoryContent {
 
 /// State class for StoryContent. This class provides AdvStory functionality
 /// to story contents.
-abstract class StoryContentState<T extends StoryContent> extends State<T> {
+abstract class StoryContentState<T extends StoryContent> extends State<T> with AutomaticKeepAliveClientMixin {
   final _cron = Cron();
   ContentPositionProvider? _positionProvider;
   DataProvider? _dataProvider;
@@ -74,8 +74,7 @@ abstract class StoryContentState<T extends StoryContent> extends State<T> {
   bool get isFirstContent {
     assert(_dataProvider != null, _excMessage);
 
-    return _dataProvider!.positionNotifier.initialPosition == position &&
-        _dataProvider!.positionNotifier.story == position.story;
+    return _dataProvider!.positionNotifier.initialPosition == position && _dataProvider!.positionNotifier.story == position.story;
   }
 
   /// If the tray of this content is an [AnimatedTray] and this content is the
@@ -276,8 +275,7 @@ abstract class StoryContentState<T extends StoryContent> extends State<T> {
   /// your action in the [onTimeout] method.
   ///
   /// [markReady] cancels the timeout when called.
-  void setTimeout(Duration timeout) =>
-      _cron.start(onComplete: onTimeout, duration: timeout);
+  void setTimeout(Duration timeout) => _cron.start(onComplete: onTimeout, duration: timeout);
 
   /// Called when the end of the set timeout is reached.
   ///
@@ -327,6 +325,9 @@ abstract class StoryContentState<T extends StoryContent> extends State<T> {
   /// - For example, if you are playing a video, you should pause and reset it's
   /// progress inside of this method.
   void onStop() {}
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
 /// Base class for [ImageContent] and [VideoContent].
@@ -375,6 +376,8 @@ abstract class ManagedContent extends StoryContent {
 /// Shortcut for determining [StoryStatus] state.
 extension StatusComparer on StoryStatus {
   bool get shouldPlay => this == StoryStatus.play;
+
   bool get shouldPause => this == StoryStatus.pause;
+
   bool get shouldStop => this == StoryStatus.stop;
 }

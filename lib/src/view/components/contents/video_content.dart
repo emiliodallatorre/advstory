@@ -79,6 +79,8 @@ class _VideoContentState extends StoryContentState<VideoContent> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     if (_hasError && widget.errorBuiler != null) {
       return widget.errorBuiler!.call();
     }
