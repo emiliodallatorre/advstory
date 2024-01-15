@@ -328,7 +328,7 @@ class AdvStoryControllerImpl implements AdvStoryController {
     assert(content >= 0, "Content index out of range!");
     flowManager.reset();
 
-    void _listener() {
+    void listener() {
       if (storyController!.page!.floor() == story) {
         SchedulerBinding.instance.addPostFrameCallback((timeStamp) async {
           await _waitContentController(story);
@@ -342,7 +342,7 @@ class AdvStoryControllerImpl implements AdvStoryController {
           positionNotifier.update(content: content, story: story);
         });
 
-        storyController!.removeListener(_listener);
+        storyController!.removeListener(listener);
       }
     }
 
@@ -351,7 +351,7 @@ class AdvStoryControllerImpl implements AdvStoryController {
       contentController!.jumpToPage(content);
       positionNotifier.update(content: content);
     } else {
-      storyController!.addListener(_listener);
+      storyController!.addListener(listener);
       storyController!.jumpToPage(story);
     }
   }

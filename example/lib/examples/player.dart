@@ -25,12 +25,12 @@ class _PlayerState extends State<Player> {
       body: SafeArea(
         child: Stack(
           children: [
-            Align(
+            const Align(
               alignment: Alignment.topCenter,
               child: Padding(
-                padding: const EdgeInsets.all(15),
+                padding: EdgeInsets.all(15),
                 child: Row(
-                  children: const [
+                  children: [
                     Icon(Icons.info, color: Colors.blue),
                     SizedBox(width: 10),
                     Expanded(
