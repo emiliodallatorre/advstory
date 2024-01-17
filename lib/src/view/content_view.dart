@@ -178,11 +178,18 @@ class ContentViewState extends State<ContentView> with AutomaticKeepAliveClientM
                           position: StoryPosition(index, widget.storyIndex),
                           child: content,
                         ),
-                        FadeTransition(
-                          opacity: _provider!.controller.opacityController,
-                          child: Stack(
-                            fit: StackFit.expand,
-                            children: _getComponents(content),
+                        IgnorePointer(
+                          // ignoring: false,
+                          child: Scaffold(
+                            backgroundColor: Colors.transparent,
+                            resizeToAvoidBottomInset: false,
+                            body: FadeTransition(
+                              opacity: _provider!.controller.opacityController,
+                              child: Stack(
+                                fit: StackFit.expand,
+                                children: _getComponents(content),
+                              ),
+                            ),
                           ),
                         ),
                       ],

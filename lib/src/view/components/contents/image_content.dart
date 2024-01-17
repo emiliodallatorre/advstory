@@ -111,4 +111,7 @@ class _ImageContentState extends StoryContentState<ImageContent> {
       _hasError = true;
     });
   }
+
+  @override
+  bool get wantsToKeepAlive => true;
 }
