@@ -25,6 +25,8 @@ class Story {
     required this.contentBuilder,
     this.header,
     this.footer,
+    this.onHeaderTap,
+    this.onFooterTap,
   });
 
   /// Function that will be called to build a [AdvStoryContent].
@@ -47,4 +49,6 @@ class Story {
   ///
   /// If null, the story's bottom section will be empty.
   final Widget? footer;
+
+  final VoidCallback? onHeaderTap, onFooterTap;
 }

@@ -341,6 +341,8 @@ abstract class ManagedContent extends StoryContent {
     this.footer,
     this.timeout,
     this.errorBuiler,
+    this.onHeaderTap,
+    this.onFooterTap,
     Key? key,
   }) : super(key: key);
 
@@ -368,6 +370,8 @@ abstract class ManagedContent extends StoryContent {
   /// Builder to create error view to show when media couldn't loaded
   /// in [timeout].
   final Widget Function()? errorBuiler;
+
+  final VoidCallback? onHeaderTap, onFooterTap;
 
   @override
   StoryContentState<ManagedContent> createState();

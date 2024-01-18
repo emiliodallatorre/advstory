@@ -101,26 +101,45 @@ class ContentViewState extends State<ContentView> with AutomaticKeepAliveClientM
     Widget? header;
     Widget? footer;
 
+    VoidCallback? onHeaderTap, onFooterTap;
+
     if (content is SimpleCustomContent) {
       header = content.useStoryHeader ? widget.story.header : null;
       footer = content.useStoryFooter ? widget.story.footer : null;
+
+      onHeaderTap = content.useStoryHeader ? widget.story.onHeaderTap : null;
+      onFooterTap = content.useStoryFooter ? widget.story.onFooterTap : null;
     } else if (content is ManagedContent) {
       header = content.header ?? widget.story.header;
       footer = content.footer ?? widget.story.footer;
+
+      onHeaderTap = content.onHeaderTap;
+      onFooterTap = content.onFooterTap;
     }
+
+    onHeaderTap = () {
+      debugPrint("Pressione su header");
+      // onHeaderTap?.call();
+    };
 
     return [
       if (header != null)
         Positioned(
           top: _provider!.style.indicatorStyle.height + 16,
           left: 0,
-          child: header,
+          child: GestureDetector(
+            onTap: onHeaderTap,
+            child: header,
+          ),
         ),
       if (footer != null)
         Positioned(
           bottom: 0,
           left: 0,
-          child: footer,
+          child: GestureDetector(
+            onTap: onFooterTap,
+            child: footer,
+          ),
         ),
     ];
   }
@@ -164,6 +183,7 @@ class ContentViewState extends State<ContentView> with AutomaticKeepAliveClientM
                 onTapUp: _handleTapUp,
                 onVerticalDragEnd: onVerticalDrag,
                 child: PageView.builder(
+
                   allowImplicitScrolling: _provider!.preloadContent,
                   controller: _pageController,
                   itemCount: widget.story.contentCount,
@@ -178,18 +198,12 @@ class ContentViewState extends State<ContentView> with AutomaticKeepAliveClientM
                           position: StoryPosition(index, widget.storyIndex),
                           child: content,
                         ),
-                        IgnorePointer(
-                          // ignoring: false,
-                          child: Scaffold(
-                            backgroundColor: Colors.transparent,
-                            resizeToAvoidBottomInset: false,
-                            body: FadeTransition(
-                              opacity: _provider!.controller.opacityController,
-                              child: Stack(
-                                fit: StackFit.expand,
-                                children: _getComponents(content),
-                              ),
-                            ),
+                        FadeTransition(
+                          opacity: _provider!.controller.opacityController,
+                          child: Stack(
+                            fit: StackFit.expand,
+
+                            children: _getComponents(content),
                           ),
                         ),
                       ],
