@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:math' as math;
 import 'dart:ui';
 
 import 'package:advstory/src/contants/enums.dart';
@@ -183,7 +184,6 @@ class ContentViewState extends State<ContentView> with AutomaticKeepAliveClientM
                 onTapUp: _handleTapUp,
                 onVerticalDragEnd: onVerticalDrag,
                 child: PageView.builder(
-
                   allowImplicitScrolling: _provider!.preloadContent,
                   controller: _pageController,
                   itemCount: widget.story.contentCount,
@@ -194,16 +194,15 @@ class ContentViewState extends State<ContentView> with AutomaticKeepAliveClientM
 
                     return Stack(
                       children: [
-                        ContentPositionProvider(
-                          position: StoryPosition(index, widget.storyIndex),
-                          child: content,
-                        ),
+                        ContentPositionProvider(position: StoryPosition(index, widget.storyIndex), child: content),
                         FadeTransition(
                           opacity: _provider!.controller.opacityController,
-                          child: Stack(
-                            fit: StackFit.expand,
-
-                            children: _getComponents(content),
+                          child: Padding(
+                            padding: getBottomPadding(context),
+                            child: Stack(
+                              fit: StackFit.expand,
+                              children: _getComponents(content),
+                            ),
                           ),
                         ),
                       ],
@@ -232,6 +231,18 @@ class ContentViewState extends State<ContentView> with AutomaticKeepAliveClientM
         ),
       ),
     );
+  }
+
+  EdgeInsets getBottomPadding(final BuildContext context) {
+    final MediaQueryData mediaQuery = MediaQuery.of(context);
+    final bottomPadding = math.max(mediaQuery.viewInsets.bottom - mediaQuery.viewPadding.bottom - 32.0, 0.0);
+
+    debugPrint(MediaQuery.of(context).viewInsets.toString());
+    debugPrint(MediaQuery.of(context).viewPadding.toString());
+
+    debugPrint("Bottom padding: $bottomPadding");
+
+    return EdgeInsets.only(bottom: bottomPadding);
   }
 
   @override
