@@ -114,14 +114,9 @@ class ContentViewState extends State<ContentView> with AutomaticKeepAliveClientM
       header = content.header ?? widget.story.header;
       footer = content.footer ?? widget.story.footer;
 
-      onHeaderTap = content.onHeaderTap;
-      onFooterTap = content.onFooterTap;
+      onHeaderTap = content.onHeaderTap ?? widget.story.onHeaderTap;
+      onFooterTap = content.onFooterTap ?? widget.story.onFooterTap;
     }
-
-    onHeaderTap = () {
-      debugPrint("Pressione su header");
-      // onHeaderTap?.call();
-    };
 
     return [
       if (header != null)
@@ -130,6 +125,7 @@ class ContentViewState extends State<ContentView> with AutomaticKeepAliveClientM
           left: 0,
           child: GestureDetector(
             onTap: onHeaderTap,
+            behavior: HitTestBehavior.opaque,
             child: header,
           ),
         ),
@@ -176,7 +172,7 @@ class ContentViewState extends State<ContentView> with AutomaticKeepAliveClientM
           child: Stack(
             children: [
               GestureDetector(
-                behavior: HitTestBehavior.translucent,
+                behavior: HitTestBehavior.deferToChild,
                 onLongPressDown: _handleDownPress,
                 onLongPressCancel: _provider!.controller.resume,
                 onLongPressUp: _provider!.controller.resume,
