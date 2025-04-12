@@ -66,7 +66,7 @@ class _StoryViewState extends State<StoryView> {
             allowImplicitScrolling: _provider!.preloadStory,
             physics: const NeverScrollableScrollPhysics(),
             pageSnapping: false,
-            controller: _provider!.controller.storyController!,
+            controller: _provider?.controller.storyController,
             // Added one more page to detect when user swiped past
             // the last page
             itemBuilder: (context, index) {
